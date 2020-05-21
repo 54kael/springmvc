@@ -1,46 +1,40 @@
-package com.kael.javassm.config;
-
+package com.kael.javaconfigssm.config;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.io.IOException;
 
 @Configuration
-@EnableWebMvc
-@ComponentScan("com.kael.javassm")
-public class WebConfig implements WebMvcConfigurer {
-    @Bean
-    public ViewResolver viewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/view/");
-        resolver.setSuffix(".jsp");
-        return resolver;
-    }
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
+@MapperScan("com.kael.javaconfigssm.mapper")
+@PropertySource("classpath:dataBase.properties")
+public class DataBaseConfig {
+    @Value("${user}")
+    private String username;
 
+    @Value("${password}")
+    private String password;
+
+    @Value("${url}")
+    private String url;
+
+    @Value("${driverClassName}")
+    private String driverClassName;
     @Bean
     public DriverManagerDataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUsername("root");
-        /*dataSource.setDriverClassName("com.mysql.jdbc.Driver");*/
-        dataSource.setPassword("123456");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/student?useUnicode=true&characterEncoding=utf8");
+        dataSource.setUsername(username);
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setPassword(password);
+        dataSource.setUrl(url);
         return dataSource;
     }
 
@@ -55,14 +49,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     public Resource[] resolveMapperLocations () throws IOException {
         ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-        return resourceResolver.getResources("classpath*:com/kael/javassm/mapper/*.xml");
+        return resourceResolver.getResources("classpath*:com/kael/javaconfigssm/mapper/*.xml");
     }
-
-    @Bean
+/*    @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer mapperScanner = new MapperScannerConfigurer();
-        mapperScanner.setBasePackage("com.kael.javassm.mapper");
+        mapperScanner.setBasePackage("com.kael.javaconfigssm.mapper");
         mapperScanner.setSqlSessionFactoryBeanName("sqlSessionFactoryBean");
         return mapperScanner;
-    }
+    }*/
+
+
 }
