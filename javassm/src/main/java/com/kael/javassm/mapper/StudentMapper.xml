@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kael.javassm.mapper.StudentMapper">
+    <resultMap id="studentMap" type="com.kael.javassm.beans.Student">
+        <id property="sId" column="s_id" />
+        <result property="sName" column="s_Name" />
+        <result property="sSex" column="s_sex" />
+        <result property="sBirth" column="s_birth" />
+    </resultMap>
+
+    <select id="selectStudentById" resultMap="studentMap">
+        select * from student where s_id = #{id}
+    </select>
+
+
+</mapper>
